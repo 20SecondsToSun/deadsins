@@ -1,6 +1,8 @@
 package game.elements {
 
 	import Box2D.Dynamics.b2Body;
+	import flash.display.BlendMode;
+	import starling.display.graphicsEx.ShapeEx;
 	import starling.display.Quad;
 
 	import citrus.math.MathUtils;
@@ -17,8 +19,20 @@ package game.elements {
 		private var _vecSprites:Vector.<Sprite>;
 		private var _width:uint;
 		private var _height:uint;
+		
+		private var rope:ShapeEx;
 
 		public function RopeChainGraphics() {
+			
+			rope = new ShapeEx();
+			//shape.blendMode = BlendMode.ADD;
+			addChild(rope);
+			rope.graphics.lineStyle(4);
+			
+			var controlPoints:Array = [new Point(0, 50), new Point(10, 100), new Point(0, 150), new Point(-10, 200)];
+			
+			
+			rope.graphics.naturalCubicSplineTo(controlPoints, false, 100);
 	
 		}
 
@@ -38,24 +52,41 @@ package game.elements {
 				var fq:Quad = new Quad(_width, _height, 0xFFFFFF);
 				sprite.addChild(fq);
 				
-				addChild(sprite);
+				//addChild(sprite);
 				_vecSprites.push(sprite);
 			}
+			trace("init");
 		}
-
-		public function update(vecBodyChain:Vector.<b2Body>, box2DScale:Number):void {
+		public function update(vecBodyChain:Vector.<b2Body>, box2DScale:Number, last:b2Body):void 
+		{
+		
 
 			var i:uint = 0;			
+			var controlPoints:Array = [];
+			//trace(" len ", vecBodyChain.length);
 			
-			for each (var body:b2Body in vecBodyChain) {
-
-				_vecSprites[i].x = body.GetPosition().x * box2DScale - this.parent.x - _width * 0.5;
-				_vecSprites[i].y = body.GetPosition().y * box2DScale - this.parent.y - _height * 0.5;
+			for (var j:int = 0; j <vecBodyChain.length ; j++) 
+			{
+				var _x:Number = vecBodyChain[j].GetPosition().x * box2DScale - this.parent.x - _width * 0.5;
+				var _y:Number = vecBodyChain[j].GetPosition().y * box2DScale - this.parent.y - _height * 0.5;
+				//trace(_x, _y)
 				
-				//MathUtils.RotateAroundExternalPoint(_vecSprites[i], new Point(_width * 0.5 + _vecSprites[i].x, _height * 0.5 + _vecSprites[i].y), body.GetAngle() * 180 / Math.PI - _vecSprites[i].rotation - this.parent.rotation);
+				controlPoints.push(new Point(_x, _y));
 				
-				++i;
 			}
+			
+			_x = last.GetPosition().x * box2DScale - this.parent.x - _width * 0.5;
+			_y = last.GetPosition().y * box2DScale - this.parent.y - _height * 0.5;
+			
+			//controlPoints.push(new Point(_x, _y));
+			
+			
+			rope.graphics.clear();
+			rope.graphics.lineStyle(6, 0x592D00);			
+			rope.graphics.naturalCubicSplineTo(controlPoints, false, 100);
+			
+			
+		
 		}
 	}
 }

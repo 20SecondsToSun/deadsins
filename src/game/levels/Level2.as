@@ -1,12 +1,7 @@
 package game.levels 
 {
 	import Box2D.Dynamics.Contacts.b2Contact;
-	import citrus.objects.platformer.box2d.Enemy;
-	import citrus.physics.box2d.Box2DUtils;
 	import game.levels.ALevel;
-	import starling.display.Quad;
-	import starling.events.TouchEvent;
-	import starling.events.TouchPhase;
 	
 /**
 	 * ...
@@ -31,10 +26,7 @@ package game.levels
 		
 		}			
 		
-		override protected function onTouch(event:TouchEvent):void 
-		{
-			
-		}
+	
 	}
 
 }

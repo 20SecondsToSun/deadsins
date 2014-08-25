@@ -57,8 +57,11 @@ package game.levels
 			zombie.setAnimState("idle");			
 			add(zombie);
 			
-						
-			cargo = new Cargo("cloud", {x: stage.stageWidth * 0.5 - 200, y: 250, radius:2.5, view:assets.getTexture("stone_tile")})
+				
+			
+			
+			
+			cargo = new Cargo("cargo", {x: stage.stageWidth * 0.5 - 200, y: 250, radius:2.5, view:assets.getTexture("shar")})
 			cargo.touchable = true;
 			//cargo.view = fq;			
 			cargo.onBeginContact.add(collisionDetectHandler);	
@@ -66,12 +69,16 @@ package game.levels
 			add(cargo);					
 			
 			//var gr:RopeChainGraphics = new RopeChainGraphics();
-			var ropeGraphics:RopeChainGraphics = new RopeChainGraphics();
 			
-			ropeChain = new RopeChain("ropeChain", { y:10,  x:stage.stageWidth*0.5, registration:"topLeft", cargo:cargo, view: ropeGraphics} );
+			var ropeGraphics:RopeChainGraphics = new RopeChainGraphics();
+			ropeChain = new RopeChain("ropeChain", { y:10,  x:stage.stageWidth*0.5, registration:"topLeft", cargo:cargo, view: ropeGraphics, links:10, allLength:130} );
 			ropeChain.touchable = true;			
 			ropeChain.onBeginContact.add(contactHandler);	
 			add(ropeChain);
+			
+			
+			
+			
 		}
 		
 		private function contactHandler(contact:b2Contact):void 
@@ -79,7 +86,12 @@ package game.levels
 			trace("contact", contact.GetFixtureA().GetBody());
 		}
 		
-		override public function update(timeDelta:Number):void 
+		override protected function touchHandler(phase:String):void 
+		{
+			trace("touch::  ", phase);
+		}
+		
+		/*override public function update(timeDelta:Number):void 
 		{
 			super.update(timeDelta);
 			//if(ropeChain)
@@ -90,11 +102,11 @@ package game.levels
 				//_mobileInput.
 				//cloud.body.SetType(2);
 				
-				//ropeChain.sliceRope();
-					ropeChain.impulse();
+				ropeChain.sliceRope();
+				//	ropeChain.impulse();
 				
 			}			
-		}
+		}*/
 		
 		override protected function levelCreation():void
 		{	
@@ -120,11 +132,6 @@ package game.levels
 			}
 		}
 		
-		override protected function onTouch(event:TouchEvent):void
-		{
-		
-			
-		}
 		
 		private function intersection(fixture:b2Fixture, point:b2Vec2, normal:b2Vec2, fraction:Number):void
 		{			

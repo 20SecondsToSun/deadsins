@@ -47,11 +47,13 @@ package game.elements
 			//super.defineFixture();
 			_fixtureDef = new b2FixtureDef();
 			_fixtureDef.shape = _shape;
+		
 			with (_fixtureDef) 
 			{
-				density = 1;
+				density = 1/70;
 				friction = 1;
-				restitution = 0.5;
+				restitution = 0.1;
+				
 				shape = _shape;
 				filter.categoryBits = PhysicsCollisionCategories.Get("Level");
 				filter.maskBits = PhysicsCollisionCategories.GetAll();						

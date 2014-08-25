@@ -15,6 +15,9 @@ package game.controllers {
 		[Embed(source="../../../embed/crate.png")]
 		public static const _cratePng:Class;	
 		
+		[Embed(source="../../../embed/shar.png")]
+		public static const shar:Class;	
+		
 		
 		[Embed(source="../../../embed/tiles/stone/stone_010.png")]
 		public static const stone_tile:Class;	
