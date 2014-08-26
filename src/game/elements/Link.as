@@ -22,7 +22,6 @@ package game.elements
 			
 			attach = params.position;
 			chainLength = params.chainLength;
-			trace("Link                   __", attach);
 			super.addPhysics();
 		}
 		

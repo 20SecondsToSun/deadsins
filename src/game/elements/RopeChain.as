@@ -111,7 +111,7 @@ package game.elements
 			polygonShape.SetAsBox(10 / worldScale, 10 / worldScale);
 			// ceiling fixture;
 			var fixtureDef:b2FixtureDef = new b2FixtureDef();
-			fixtureDef.density = 1000;
+			fixtureDef.density = 100000;
 			fixtureDef.friction = 1;
 			fixtureDef.restitution = 0.0005;
 			fixtureDef.shape = polygonShape;
@@ -161,7 +161,7 @@ package game.elements
 				//var newLink:b2Body = world.CreateBody(bodyDef);
 				//_vecBodyChain.push(newLink);				
 				//newLink.CreateFixture(fixtureDef);
-				var __newLink:Link = new Link("link", { position:new Point(attach.x, chainLength + 2 * chainLength * i+30), chainLength:chainLength } );
+				var __newLink:Link = new Link("link", { position:new Point(attach.x, chainLength + 2 * chainLength * i), chainLength:chainLength } );
 				var newLink:b2Body = __newLink.body;
 				_vecBodyChain.push(newLink);					
 				revoluteJoint(link, newLink, new b2Vec2(0, chainLength / worldScale), new b2Vec2(0, -chainLength / worldScale));
@@ -190,7 +190,7 @@ package game.elements
 		public function impulse():void
 		{
 			//cargo.body.ApplyImpulse(new b2Vec2(0, 0), cargo.body.GetWorldCenter());
-			cargo.body.ApplyImpulse(new b2Vec2(-1 + Math.random() * 10, -2), cargo.body.GetWorldCenter());
+			//cargo.body.ApplyImpulse(new b2Vec2(-1 + Math.random() * 10, -2), cargo.body.GetWorldCenter());
 			//steelBall.ApplyImpulse(new b2Vec2(-5 + Math.random() * 10, -15), steelBall.GetWorldCenter());
 		}
 		
@@ -247,6 +247,13 @@ package game.elements
 		{
 			onEndContact.dispatch(contact);
 		}
-	
+		
+		override public function destroy():void
+		{
+			//_box2D.world.DestroyBody(_body);
+			trace("name---------------",name);
+			//REMOVE ALL LINKS!!!!!!");
+			//super.destroy();
+		}
 	}
 }

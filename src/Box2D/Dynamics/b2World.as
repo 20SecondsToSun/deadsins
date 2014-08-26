@@ -185,6 +185,7 @@ public class b2World
 			return;
 		}
 		
+		//if (b == null) return;//!!!! check this
 		// Delete the attached joints.
 		var jn:b2JointEdge = b.m_jointList;
 		while (jn)

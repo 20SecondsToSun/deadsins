@@ -41,8 +41,11 @@ package citrus.core.starling {
 		/**
 		 * Called by the Citrus Engine.
 		 */
-		public function destroy():void {
+		public function destroy():void
+		{
+			trace("-------------------------------delete");
 			_realState.destroy();
+			trace("-------------------------------delete out");
 		}
 
 		/**

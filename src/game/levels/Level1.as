@@ -3,23 +3,22 @@ package game.levels
 	import Box2D.Common.Math.b2Vec2;
 	import Box2D.Dynamics.b2Body;
 	import Box2D.Dynamics.b2Fixture;
-	import Box2D.Dynamics.b2FixtureDef;
 	import Box2D.Dynamics.Contacts.b2Contact;
+	import citrus.math.MathVector;
 	import citrus.objects.CitrusSprite;
 	import citrus.objects.platformer.box2d.Platform;
 	import citrus.physics.box2d.Box2DUtils;
 	import citrus.physics.box2d.IBox2DPhysicsObject;
-	import citrus.physics.PhysicsCollisionCategories;
 	import citrus.view.starlingview.AnimationSequence;
+	import flash.geom.Point;
+	import game.elements.Cargo;
 	import game.elements.RopeChain;
 	import game.elements.RopeChainGraphics;
 	import game.heroes.Zombie;
 	import game.levels.ALevel;
-	import starling.display.Quad;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.textures.Texture;
-	import game.elements.Cargo;
 	
 	/**
 	 * ...
@@ -62,73 +61,70 @@ package game.levels
 			
 			cargo = new Cargo("cargo", {x: stage.stageWidth * 0.5 - 200, y: 250, radius: 2.5, view: assets.getTexture("shar")})
 			cargo.touchable = true;
-			//cargo.view = fq;			
 			cargo.onBeginContact.add(collisionDetectHandler);
-			//cargo.body.SetType(2);	
-			add(cargo);
-			
-			//var gr:RopeChainGraphics = new RopeChainGraphics();
+			add(cargo);			
 			
 			var ropeGraphics:RopeChainGraphics = new RopeChainGraphics();
 			ropeChain = new RopeChain("ropeChain", {y: 10, x: stage.stageWidth * 0.5, registration: "topLeft", cargo: cargo, view: ropeGraphics, links: 10, allLength: 120});
-			ropeChain.touchable = true;
-			ropeChain.onBeginContact.add(contactHandler);
+			ropeChain.touchable = true;			
 			add(ropeChain);
 		
-		}
+		}		
 		
-		private function contactHandler(contact:b2Contact):void
-		{
-			trace("contact", contact.GetFixtureA().GetBody());
-		}
-		
-		override protected function onTouchHandler(event:TouchEvent):void
-		{
-			super.onTouchHandler(event);
-			
-			if (!touch)
-				return;
-			
-			if (ropeChain && touch.phase == TouchPhase.BEGAN)
-				ropeChain.impulse();
-				
-			if (touch.phase == TouchPhase.MOVED)
-			{
-				var __scaleBox2d:Number = box2D.scale;
-				var vec1:b2Vec2 = new b2Vec2(touchPoint1.x / __scaleBox2d, touchPoint1.y / __scaleBox2d);
-				var vec2:b2Vec2 = new b2Vec2(touchPoint2.x / __scaleBox2d, touchPoint2.y / __scaleBox2d);
-				
-				box2D.world.RayCast(intersection, vec1, vec2);
-			}
-		}
-		
-		private function intersection(fixture:b2Fixture, point:b2Vec2, normal:b2Vec2, fraction:Number):void
+		override public function intersection(fixture:b2Fixture, point:b2Vec2, normal:b2Vec2, fraction:Number):void
 		{
 			var body:b2Body = fixture.GetBody();
 			
 			if (body.GetUserData().name && body.GetUserData().name == "link")			
 				ropeChain.sliceRope();			
 		}
-		private var kill:Boolean = false;
+	
 		private function collisionDetectHandler(contact:b2Contact):void
 		{
-			var maybeZombie:* = Box2DUtils.CollisionGetOther(RopeChain(getObjectByName("ropeChain")), contact);
+			var maybeZombie:IBox2DPhysicsObject = Box2DUtils.CollisionGetOther(Cargo(getObjectByName("cargo")), contact);
 			
-			if (maybeZombie is Zombie && !kill)
+			if (maybeZombie is Zombie && (maybeZombie as Zombie).needToKill == false)
 			{
-				
-				_ce.sound.playSound("Kill");				
-				zombie.setAnimState("die");					
-		
-				kill = true;
-
-			}
+				var normalPoint:Point = new Point(contact.GetManifold().m_localPoint.x, contact.GetManifold().m_localPoint.y);
+				var collisionAngle:Number = new MathVector(normalPoint.x, normalPoint.y).angle * 180 / Math.PI;
+				trace("  collisionAngle ", collisionAngle);
+				//if (collisionAngle>0)
+				//{
+					_ce.sound.playSound("Kill");
+					(maybeZombie as Zombie).setAnimState("die");
+					(maybeZombie as Zombie).needToKill = true;
+					killedZombieVector.push(maybeZombie as Zombie);
+				//}
+			}					
+			
 		}
+		
 		override public function update(timeDelta:Number):void
+		{		
+			super.update(timeDelta);	
+			
+			checkForKilledZombieToSetInactive();
+			
+			checkForEndLevel();					
+		}	
+		
+		private function checkForKilledZombieToSetInactive():void 
 		{
-			if (kill) zombie.body.SetActive(false);
-
-			_realState.update(timeDelta);			
+			for (var i:int = 0; i < killedZombieVector.length; i++) 
+			{
+				if (killedZombieVector[i].needToKill)
+				{
+					killedZombieVector[i].body.SetActive(false);	
+					killedZombieVector.splice(i, 1);
+					_deathCount++;
+				}
+			}			
+		}
+		
+		private function checkForEndLevel():void 
+		{
+			if (_deathCount >= _deathToFinish)
+				nextlevel();
 		}
 	
 	}

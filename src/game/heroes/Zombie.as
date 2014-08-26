@@ -68,6 +68,18 @@ package game.heroes {
 		protected var _rightSensorFixture:b2Fixture;
 		protected var _sensorFixtureDef:b2FixtureDef;
 		
+		
+		private var _needToKill:Boolean = false;
+		public function set needToKill(value:Boolean):void
+		{
+			_needToKill = value;
+		}
+		
+		public function get needToKill():Boolean
+		{
+			return _needToKill ;
+		}
+		
 		public function Zombie(name:String, params:Object=null)
 		{
 			updateCallEnabled = true;
@@ -168,13 +180,13 @@ package game.heroes {
 			super.defineFixture();
 			_fixtureDef.friction = 0;
 			_fixtureDef.filter.categoryBits = PhysicsCollisionCategories.Get("BadGuys");
-			_fixtureDef.filter.maskBits = PhysicsCollisionCategories.GetAllExcept("Items");
+			_fixtureDef.filter.maskBits = PhysicsCollisionCategories.GetAllExcept("Items", "BadGuys");
 			
 			_sensorFixtureDef = new b2FixtureDef();
 			_sensorFixtureDef.shape = _leftSensorShape;
 			_sensorFixtureDef.isSensor = true;
 			_sensorFixtureDef.filter.categoryBits = PhysicsCollisionCategories.Get("BadGuys");
-			_sensorFixtureDef.filter.maskBits = PhysicsCollisionCategories.GetAllExcept("Items");
+			_sensorFixtureDef.filter.maskBits = PhysicsCollisionCategories.GetAllExcept("Items", "BadGuys");
 		}
 		
 		override protected function createFixture():void
@@ -205,8 +217,11 @@ package game.heroes {
 				var normalPoint:Point = new Point(contact.GetManifold().m_localPoint.x, contact.GetManifold().m_localPoint.y);
 				var collisionAngle:Number = new MathVector(normalPoint.x, normalPoint.y).angle * 180 / Math.PI;
 				
-				if ((collider is Platform && collisionAngle != 90) || collider is Zombie)
+							
+				if ((collider is Platform && collisionAngle != 90 && collisionAngle % 90 == 0) )//|| collider is Zombie)
+				{					
 					turnAround();
+				}
 			}
 				
 		}

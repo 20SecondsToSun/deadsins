@@ -32,7 +32,9 @@ package game.elements
 			_radius = params.radius;
 			
 			onBeginContact = new Signal(b2Contact);
-			onEndContact = new Signal(b2Contact);		
+			onEndContact = new Signal(b2Contact);	
+			
+		
 		}	
 		
 		override protected function defineBody():void

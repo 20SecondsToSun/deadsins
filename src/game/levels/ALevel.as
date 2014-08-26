@@ -1,6 +1,7 @@
 package game.levels {	
 
 	import Box2D.Common.Math.b2Vec2;
+	import Box2D.Dynamics.b2Fixture;
 	import Box2D.Dynamics.Contacts.b2Contact;
 	import citrus.core.starling.StarlingCitrusEngine;
 	import citrus.core.starling.StarlingState;
@@ -10,12 +11,17 @@ package game.levels {
 	import flash.utils.setTimeout;
 	import game.controllers.Assets;
 	import game.controllers.MobileInput;
+	import game.heroes.Zombie;
 	import org.osflash.signals.Signal;
 	import starling.display.Shape;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.utils.AssetManager;
+	
+	import citrus.objects.CitrusSprite;
+	import citrus.objects.platformer.box2d.Platform;
+	import citrus.view.starlingview.AnimationSequence;
 	/**
 	 * @author Aymeric
 	 */
@@ -45,7 +51,11 @@ package game.levels {
 		protected var mouseTrace:Shape;
 		
 		private var touchPointArray:Vector.<b2Vec2>;
-				
+		
+		
+		protected var _deathToFinish:int = 1;
+		protected var _deathCount:int = 0;		
+		protected var killedZombieVector:Vector.<Zombie> = new Vector.<Zombie>();
 		
 		
 		
@@ -55,9 +65,7 @@ package game.levels {
 			_level 		 = level;
 			
 			lvlEnded	 = new Signal();
-			restartLevel = new Signal();
-		
-			
+			restartLevel = new Signal();			
 		}	
 		
 		override public function initialize():void
@@ -161,16 +169,31 @@ package game.levels {
 			{
 				mouseTrace.graphics.clear();
 			}
+			
+			if (touch.phase == TouchPhase.MOVED)
+			{
+				var __scaleBox2d:Number = box2D.scale;
+				var vec1:b2Vec2 = new b2Vec2(touchPoint1.x / __scaleBox2d, touchPoint1.y / __scaleBox2d);
+				var vec2:b2Vec2 = new b2Vec2(touchPoint2.x / __scaleBox2d, touchPoint2.y / __scaleBox2d);
+				
+				box2D.world.RayCast(intersection, vec1, vec2);
+			}
 		}		
 			
 		protected function inititalizeLevel():void 
 		{
 			
-		}	
+		}
+		
+		public function intersection(fixture:b2Fixture, point:b2Vec2, normal:b2Vec2, fraction:Number):void
+		{
+			
+		}
 		
 		
 		protected function nextlevel():void	
 		{
+			
 			_timeoutID = setTimeout(function():void {
 
 			lvlEnded.dispatch();
@@ -181,8 +204,5 @@ package game.levels {
 		protected function _changeLevel(contact:b2Contact):void {
 		
 		}
-	
-
-
 	}
 }

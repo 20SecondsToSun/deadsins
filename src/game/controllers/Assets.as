@@ -20,8 +20,14 @@ package game.controllers {
 		
 		
 		[Embed(source="../../../embed/tiles/stone/stone_010.png")]
-		public static const stone_tile:Class;	
+		public static const stone_tile:Class;
 		
+		[Embed(source="../../../embed/tiles/stone/stone_010_wide.png")]
+		public static const stone_wide:Class;	
+		
+		
+		[Embed(source="../../../embed/tiles/stone/STONE.png")]
+		public static const stone_TEMP:Class;	
 		
 		
 	}
