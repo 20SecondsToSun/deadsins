@@ -134,24 +134,41 @@ package game.elements
 			
 			bodyDef.position.Set(320 / worldScale, chainLength  / worldScale);
 			
+			
+			
+			/*
 			var link:b2Body = world.CreateBody(bodyDef);
+		
 			_vecBodyChain.push(link);
 			link.CreateFixture(fixtureDef);
 			
+			revoluteJoint(wall, link, new b2Vec2(0, 0), new b2Vec2(0, -chainLength / worldScale));*/
+			
+			var __link:Link = new Link("link", { position:new Point(attach.x, -10), chainLength:chainLength } );
+			
+			
+				
+			var link:b2Body = __link.body;
+			_vecBodyChain.push(link);
 			revoluteJoint(wall, link, new b2Vec2(0, 0), new b2Vec2(0, -chainLength / worldScale));
+			
+			
 
 			for (var i:Number = 0; i <= links; i++)
 			{
-				bodyDef.position.Set(attach.x / worldScale, (chainLength + 2 * chainLength * i) / worldScale);
+				//bodyDef.position.Set(attach.x / worldScale, (chainLength + 2 * chainLength * i) / worldScale);
 				
-				var newLink:b2Body = world.CreateBody(bodyDef);
-				_vecBodyChain.push(newLink);
-				newLink.CreateFixture(fixtureDef);
+				//var newLink:b2Body = world.CreateBody(bodyDef);
+				//_vecBodyChain.push(newLink);				
+				//newLink.CreateFixture(fixtureDef);
+				var __newLink:Link = new Link("link", { position:new Point(attach.x, chainLength + 2 * chainLength * i+30), chainLength:chainLength } );
+				var newLink:b2Body = __newLink.body;
+				_vecBodyChain.push(newLink);					
 				revoluteJoint(link, newLink, new b2Vec2(0, chainLength / worldScale), new b2Vec2(0, -chainLength / worldScale));
 				link = newLink;				
 			}	
-			cargo.body.SetPosition(new b2Vec2(attach.x / worldScale, (chainLength + 2 * chainLength * links) / worldScale));
-			cargoJoint = revoluteJoint(link, cargo.body, new b2Vec2(0, chainLength / worldScale), new b2Vec2(0, 0));
+			cargo.body.SetPosition(new b2Vec2(attach.x / worldScale, (chainLength + 2 * chainLength * links ) / worldScale));			
+			cargoJoint = revoluteJoint(link, cargo.body, new b2Vec2(0, (chainLength) / worldScale), new b2Vec2(0, 0));
 		
 		}
 		
@@ -173,7 +190,7 @@ package game.elements
 		public function impulse():void
 		{
 			//cargo.body.ApplyImpulse(new b2Vec2(0, 0), cargo.body.GetWorldCenter());
-			cargo.body.ApplyImpulse(new b2Vec2(-5 + Math.random() * 10, -15), cargo.body.GetWorldCenter());
+			cargo.body.ApplyImpulse(new b2Vec2(-1 + Math.random() * 10, -2), cargo.body.GetWorldCenter());
 			//steelBall.ApplyImpulse(new b2Vec2(-5 + Math.random() * 10, -15), steelBall.GetWorldCenter());
 		}
 		

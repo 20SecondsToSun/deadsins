@@ -79,12 +79,7 @@ package game.heroes {
 				_inverted = true;
 		}
 		
-		override public function destroy():void
-		{
-			clearTimeout(_hurtTimeoutID);
-			
-			super.destroy();
-		}
+	
 		
 		public function get enemyClass():*
 		{
@@ -234,5 +229,7 @@ package game.heroes {
 			_hurt = false;
 			kill = true;
 		}
+		
+		
 	}
 }

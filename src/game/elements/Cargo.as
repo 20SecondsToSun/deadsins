@@ -23,7 +23,7 @@ package game.elements
 		public function Cargo(name:String, params:Object = null)
 		{
 			_beginContactCallEnabled = true;
-			_endContactCallEnabled = true;	
+			_endContactCallEnabled = true;
 			
 			
 			super(name, params);

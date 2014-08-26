@@ -135,6 +135,7 @@ package citrus.objects {
 		 */	
 		protected function defineFixture():void
 		{
+			
 			_fixtureDef = new b2FixtureDef();
 			_fixtureDef.shape = _shape;
 			_fixtureDef.density = 1;

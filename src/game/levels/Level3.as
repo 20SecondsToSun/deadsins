@@ -14,11 +14,7 @@ package game.levels
 		{
 		
 		}
-		
-		override protected function levelCreation():void
-		{
-		
-		}
+	
 		
 		private function collisionDetectHandler(contact:b2Contact):void
 		{

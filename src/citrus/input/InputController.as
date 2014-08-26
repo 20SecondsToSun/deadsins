@@ -8,7 +8,7 @@ package citrus.input {
 	 */
 	public class InputController
 	{
-		public static var hideParamWarnings:Boolean = false;
+		public static var hideParamWarnings:Boolean = true;
 		
 		public var name:String;
 		
